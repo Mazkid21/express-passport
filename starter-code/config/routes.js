@@ -8,6 +8,14 @@ var passport = require("passport");
 var usersController = require('../controllers/users');
 var staticsController = require('../controllers/statics');
 
+function authenticatedUser(req, res, next) {
+	//if the user is authenticated, then we continue the executionl
+	if (req.isAuthenticated()) return next();
+
+	//otherwise the request is always redirected to the homepage
+	res.redirect('/');
+}
+
 router.route('/')
   .get(staticsController.home);
 
@@ -21,5 +29,8 @@ router.route('/login')
 
 router.route("/logout")
   .get(usersController.getLogout)
+
+ router.route("/secret")
+ 	.get(authenticatedUser, usersController.secret);
 
 module.exports = router
